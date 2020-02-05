@@ -144,9 +144,9 @@ one of 16 colors from within the currently selected page. (Remember that the pal
 ette RAM is set to a pass-through state, so pixel values of 0 through 15 come through
 the palette RAM to the DAC unaltered.) Basically, the Color Select register gives you
 
-![**Figure A.1**  *Color selection with 16-pages-of-16-colors paging.*](images/55-01.jpg)
+![**Figure A.1**  *Color selection with 16-pages-of-16-colors paging.*](images/a-01.jpg)
 
-![**Figure A.2**  *16-pages-of-16-colors paging.*](images/55-01.jpg)
+![**Figure A.2**  *16-pages-of-16-colors paging.*](images/a-02.jpg)
 
 instantaneous access to any one of 16 completely independent pages of 16 colors
 each. (By the way, color paging isn’t available in 256-color mode. The reason should
