@@ -46,16 +46,16 @@ to perform a read/write operation to display memory. Unfortunately, the optimize
 in Microsoft C 5.0 (not 6.0) considered this to be a null operation, because any value
 ORed with 0 remains unchanged (when the destination is system memory, that is; as
 described above, ORing with 0 is a useful operation when performed to VGA
-memory). Having concluded that it had encountered what amounted to a null op-
-eration, MSC 5.0 then declined to generate any code at all.
+memory). Having concluded that it had encountered what amounted to a null operation,
+MSC 5.0 then declined to generate any code at all.
 
 That was easy enough to fix. I just substituted
 
     *ScreenPtr |= 0xFF;
 
 which is definitely not a null operation (remember, for our purposes the value ORed
-with display memory is irrelevant, so 0xFF served just as well as 0). MSC 5.0 oblig-
-ingly assembled the desired OR with memory, and there matters stood until the
+with display memory is irrelevant, so 0xFF served just as well as 0). MSC 5.0 obligingly
+assembled the desired OR with memory, and there matters stood until the
 arrival of MSC 6.0.
 
 MSC 6.0 doesn’t think `*ScreenPtr |= 0xFF;` is a null operation—but it doesn’t think
@@ -65,8 +65,8 @@ result, so MSC 6.0 treated that code as if it were
     *ScreenPtr = 0xFF;
 
 and assembled a MOV instruction, not an OR instruction. That eliminated the read
-we needed before writing to display memory, and that’s what broke so much graph-
-ics code.
+we needed before writing to display memory, and that’s what broke so much graphics
+code.
 
 The solution is simple: Instead of
 
@@ -82,8 +82,8 @@ and you should be all set.
 > There’s an important point to all this beyond simply getting read-modify-write
 > operations to work in C. Many people believe that it’s possible to write low-level
 > graphics code in C that’s as efficient as code written in assembly language, and
-> more portable, if you know exactly what code the compiler generates. This ex-
-> ample shows why that’s a fool’s game; code that depends on the compiler’s code
+> more portable, if you know exactly what code the compiler generates. This example
+> shows why that’s a fool’s game; code that depends on the compiler’s code
 > generation isn’t necessarily even portable from one release of the compiler to the
 > next, let alone between compilers. Besides, the graphics adapters you’re likely to
 > encounter under MS-DOS are generally found only in x86-based computers, so it’s
@@ -114,8 +114,8 @@ EGA. If you’re writing VGA-specific code, however, you’re shortchanging your
 The ideal 16-color arrangement on a VGA is as follows: Load palette RAM register 0
 with the value 0, palette RAM register 1 with the value 1, and so on up to palette
 RAM register 15, which should be set to 15. (I described how to load the palette
-RAM in Chapter 33, and in a little while we’ll see working code that loads the pal-
-ette.) The object here is to cause the palette RAM to pass pixel values through
+RAM in Chapter 33, and in a little while we’ll see working code that loads the palette.)
+The object here is to cause the palette RAM to pass pixel values through
 unchanged, so we can ignore it; the DAC will do all the color work.
 
 Now load DAC locations 0 through 15 with any 16 colors you’d care to display. A
@@ -140,8 +140,8 @@ instantly between color sets and thereby provide a new color interpretation for 
 pixel on the screen without changing the contents of display memory. If you view the
 DAC as consisting of 16 pages each containing 16 colors, as shown in Figure A.2,
 then the Color Select register selects one of those pages and the pixel data selects
-one of 16 colors from within the currently selected page. (Remember that the pal-
-ette RAM is set to a pass-through state, so pixel values of 0 through 15 come through
+one of 16 colors from within the currently selected page. (Remember that the palette
+RAM is set to a pass-through state, so pixel values of 0 through 15 come through
 the palette RAM to the DAC unaltered.) Basically, the Color Select register gives you
 
 ![**Figure A.1**  *Color selection with 16-pages-of-16-colors paging.*](images/a-01.jpg)
@@ -166,8 +166,8 @@ briefly in a mismatched state.
 
 On the other hand, loading the DAC without flicker or glitching is no picnic. The
 loading has to take place during non-display time; otherwise for a short time part of
-the screen will be drawn with a mix of the old color set and the new color set, result-
-ing in unintended and often highly undesirable on-screen effects. However, it can be
+the screen will be drawn with a mix of the old color set and the new color set, resulting
+in unintended and often highly undesirable on-screen effects. However, it can be
 difficult on slow computers to load a large block of DAC locations during a single
 vertical blanking period, so there may be no way to reload the DAC cleanly between
 one frame and the next (although this is more of a problem in 256-color mode,
@@ -220,8 +220,8 @@ Repeat this process whenever you want to switch to another color page.
 Although it’s not required, you’ll generally want to wait for the leading edge of the
 vertical sync pulse before switching pages, as this provides the smoothest color
 transition, as described above. Take the vertical sync wait out of Listing A.1 (which
-I’ll present a little later) and set **USE_BIOS** to 0, and you’ll see that the appear-
-ance of the program suffers considerably.
+I’ll present a little later) and set **USE_BIOS** to 0, and you’ll see that the appearance
+of the program suffers considerably.
 
 Controlling color paging through the BIOS is a similar two-step process. The first
 step is to enable 16-pages-of-16-colors paging, and that’s done by invoking interrupt
@@ -238,8 +238,8 @@ vertical sync before switching pages, you’ll only switch pages once every two 
 at most. On the other hand, if you don’t wait for vertical sync and neither does the
 BIOS, you’ll end up switching pages in the middle of frames and doing so much too
 often. You can determine which is the case in your color page-flipping programs by
-timing how long it takes the BIOS to do several color page switches at start-up, al-
-though that’s certainly a nuisance. As usual, only with your own software that programs
+timing how long it takes the BIOS to do several color page switches at start-up, although
+that’s certainly a nuisance. As usual, only with your own software that programs
 the hardware directly do you have complete control and full knowledge of what’s
 going on.
 
@@ -537,7 +537,7 @@ select, unless, of course, you intend to change the border and background colors
 This is a good time to point out that the DAC is always available and active. It’s
 obvious that the DAC can be used to select color sets in 256- and 16-color modes, but
 the DAC processes whatever comes out of the VGA in any mode. You can use the
-DAC to transform pixel colors in text mode, or even in modes 4 and 6, the CGA-
+DAC to transform pixel colors in text mode, or even in modes 4 and 6, the CGA
 compatible 4- and 2-color graphics modes (although in order to do that you need to
 understand the format in which pixels comes out of the VGA and into the DAC in
 those modes; once again, setting the palette to a pass-through state makes life easier).
@@ -556,21 +556,21 @@ of increasingly bright green colors. That is, color page 1 translates a pixel va
 into dim green, a pixel value of 2 into next-to-dimmest green, and so on up to a pixel
 value of 15, which is as green a color as the VGA can produce. Color page 2 is a
 one-position rotation of color page 1; a pixel value of 1 produces next-to-dimmest
-green, a pixel value of 2 produces slightly brighter green, a pixel value of 14 pro-
-duces brightest green, and a pixel value of 15 produces dimmest green. Each successive
+green, a pixel value of 2 produces slightly brighter green, a pixel value of 14 produces
+brightest green, and a pixel value of 15 produces dimmest green. Each successive
 color page is a one-position rotation of the preceding page, except for color page 0,
-which isn’t used because we need only 15 color pages to represent all possible rota-
-tions of a set of 15 colors.
+which isn’t used because we need only 15 color pages to represent all possible rotations
+of a set of 15 colors.
 
 Cycling through these color pages causes the circles on the screen to seem to pulse
 outward. The net effect is one of smooth motion, but not one pixel in display memory
-is being modified. This is the wonder of color manipulation: effects worthy of high-
-end graphics systems with little effort. Of course, there are limits to what color
+is being modified. This is the wonder of color manipulation: effects worthy of high-end
+graphics systems with little effort. Of course, there are limits to what color
 manipulation can do, but what it does, it does very well.
 
 Listing A.1 can perform color paging using either the direct or BIOS approach,
-depending on the setting of USE_BIOS. On my computer, both versions look ex-
-actly the same. Experiment for yourself and choose whichever you prefer.
+depending on the setting of USE_BIOS. On my computer, both versions look exactly
+the same. Experiment for yourself and choose whichever you prefer.
 
 ### Paging Invisible Pages
 
@@ -579,8 +579,8 @@ color pages without affecting the display in any way. Manipulating the color pag
 this way is much like page flipping-based animation; while you’re displaying one
 color page, you alter another one, then display the other one when it’s ready to go.
 The advantage of this over simply changing the palette is that the user will see only
-the finished color configuration, not an intermediate state. This approach effec-
-tively expands the number of available color pages from 16 to more than 4 million
+the finished color configuration, not an intermediate state. This approach effectively
+expands the number of available color pages from 16 to more than 4 million
 (16 colors per set times 256K choices for each color; that is, every combination of 16
 colors possible on the VGA).
 
